@@ -19,7 +19,9 @@ def getDB():
 def show():
     db = get_db()
     messages = db.execute(
-        'SELECT * FROM message'
+        'SELECT u.username AS username, m.subject AS subject, m.body AS body, m.created AS created'
+        ' FROM (select * from message where to_id=' + str(g.user['id']) + ') AS m JOIN User u ON  m.from_id = u.id'
+        ' ORDER BY created DESC'
     ).fetchall()
 
     return render_template('inbox/show.html', messages=messages)
